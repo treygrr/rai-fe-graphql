@@ -5,17 +5,19 @@
     <div>Stock: {{ product.stock }}</div>
     <div>Price: {{ product.price }}</div>
     <input v-if="enableAddToCart" type="number" v-model="qty">
+    <!-- <div v-if="qtyInCart">In Cart:{{ qtyInCart }}</div> -->
     <button v-if="enableAddToCart" @click="addToCart">Add To Cart</button>
 </div>
 </template>
 
 <script lang="ts" setup>
-import { AddProductToCartDocument, type Product } from '../gql/codegen/graphql';
+import { AddProductToCartDocument, type Product, CartsDocument } from '../gql/codegen/graphql';
 const qty = ref<number>()
 
 const props = defineProps<{ product: Product, enableAddToCart?: boolean}>()
 
 const addToCartMutation = useMutation(AddProductToCartDocument)
+const cartsQuery = useQuery({ query: CartsDocument, variables: {} })
 
 const addToCart = () => {
     addToCartMutation.executeMutation({ 

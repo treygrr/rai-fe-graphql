@@ -70,6 +70,7 @@ export type Query = {
 
 export type UpdateProductInput = {
   id: Scalars['ID']['input'];
+  price: Scalars['Float']['input'];
   stock: Scalars['Int']['input'];
   title: Scalars['String']['input'];
 };
