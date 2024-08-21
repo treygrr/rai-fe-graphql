@@ -1,0 +1,8 @@
+mutation updateProduct($input: UpdateProductInput!) {
+  updateProduct(input: $input) {
+    __typename
+    id
+    title
+    stock
+	}
+}
