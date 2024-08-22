@@ -3,6 +3,7 @@ query carts {
     id
     __typename
   	lines {
+      id
       __typename
 			product {
         id
@@ -10,6 +11,7 @@ query carts {
         stock
         price
       }
+      qty
     }
     lineCount
     total

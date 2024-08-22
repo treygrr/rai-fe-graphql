@@ -1,0 +1,20 @@
+mutation ClearCart ($input: ClearCartInput!){
+	clearCart(input: $input) {
+    __typename
+    id
+    lines {
+      __typename
+      id
+      product {
+        __typename
+        id
+        title
+        stock
+        price
+      }
+      qty
+    }
+    lineCount
+    total
+  }
+}

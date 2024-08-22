@@ -14,7 +14,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "mutation AddProductToCart($input: AddProductToCartInput!) {\n  addProductToCart(input: $input) {\n    __typename\n    id\n    lines {\n      __typename\n      id\n      product {\n        __typename\n        id\n        title\n        stock\n        price\n      }\n      qty\n    }\n    lineCount\n    total\n  }\n}": types.AddProductToCartDocument,
-    "query carts {\n  carts {\n    id\n    __typename\n    lines {\n      __typename\n      product {\n        id\n        title\n        stock\n        price\n      }\n    }\n    lineCount\n    total\n  }\n}": types.CartsDocument,
+    "query carts {\n  carts {\n    id\n    __typename\n    lines {\n      id\n      __typename\n      product {\n        id\n        title\n        stock\n        price\n      }\n      qty\n    }\n    lineCount\n    total\n  }\n}": types.CartsDocument,
+    "mutation ClearCart($input: ClearCartInput!) {\n  clearCart(input: $input) {\n    __typename\n    id\n    lines {\n      __typename\n      id\n      product {\n        __typename\n        id\n        title\n        stock\n        price\n      }\n      qty\n    }\n    lineCount\n    total\n  }\n}": types.ClearCartDocument,
     "query Products {\n  products {\n    __typename\n    id\n    title\n    stock\n    price\n  }\n}": types.ProductsDocument,
     "mutation updateProduct($input: UpdateProductInput!) {\n  updateProduct(input: $input) {\n    __typename\n    id\n    title\n    stock\n  }\n}": types.UpdateProductDocument,
 };
@@ -40,7 +41,11 @@ export function graphql(source: "mutation AddProductToCart($input: AddProductToC
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "query carts {\n  carts {\n    id\n    __typename\n    lines {\n      __typename\n      product {\n        id\n        title\n        stock\n        price\n      }\n    }\n    lineCount\n    total\n  }\n}"): (typeof documents)["query carts {\n  carts {\n    id\n    __typename\n    lines {\n      __typename\n      product {\n        id\n        title\n        stock\n        price\n      }\n    }\n    lineCount\n    total\n  }\n}"];
+export function graphql(source: "query carts {\n  carts {\n    id\n    __typename\n    lines {\n      id\n      __typename\n      product {\n        id\n        title\n        stock\n        price\n      }\n      qty\n    }\n    lineCount\n    total\n  }\n}"): (typeof documents)["query carts {\n  carts {\n    id\n    __typename\n    lines {\n      id\n      __typename\n      product {\n        id\n        title\n        stock\n        price\n      }\n      qty\n    }\n    lineCount\n    total\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation ClearCart($input: ClearCartInput!) {\n  clearCart(input: $input) {\n    __typename\n    id\n    lines {\n      __typename\n      id\n      product {\n        __typename\n        id\n        title\n        stock\n        price\n      }\n      qty\n    }\n    lineCount\n    total\n  }\n}"): (typeof documents)["mutation ClearCart($input: ClearCartInput!) {\n  clearCart(input: $input) {\n    __typename\n    id\n    lines {\n      __typename\n      id\n      product {\n        __typename\n        id\n        title\n        stock\n        price\n      }\n      qty\n    }\n    lineCount\n    total\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

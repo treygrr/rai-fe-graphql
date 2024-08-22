@@ -124,12 +124,9 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Cart",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Cart",
+                "ofType": null
               }
             },
             "args": [
@@ -141,6 +138,23 @@
                     "kind": "SCALAR",
                     "name": "Any"
                   }
+                }
+              }
+            ]
+          },
+          {
+            "name": "clearCart",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Cart",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
                 }
               }
             ]
