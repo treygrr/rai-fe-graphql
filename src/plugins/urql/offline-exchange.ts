@@ -38,10 +38,13 @@ const offlineExchange = () => {
             })
             if (productToAdd) {
               const isAlreadyInCart = hasCart.lines.find(line => {
-                line?.product.id === patchInput.productId
+                return line?.product.id === patchInput.productId
               })
               if (isAlreadyInCart) {
                 isAlreadyInCart.qty += patchInput.qty
+                cacheReturn = hasCart
+                console.log('already in cart')
+                return data
               } else {
                 hasCart.lines.push({
                   __typename: 'CartLine',
@@ -65,18 +68,17 @@ const offlineExchange = () => {
         
         console.log('Returned at the end of add', cacheReturn)
 
-        return cacheReturn || null
+        return null
       },
       clearCart(_args, cache, info) {
         const patchInput = info.variables.input as ClearCartInput
+
         cache.updateQuery({ query: CartsDocument, variables: {} }, data => {
           data?.carts.forEach(cart => {
             if (cart.id === patchInput.cartId) {
               cart.lines.forEach(line => {
-                console.log('qty before clear', line?.qty, line)
                 if (line?.qty) {
                   line.qty = 0
-                  console.log('qty after clear', line.qty)
                 }
               })
               cart.total = 0
@@ -86,6 +88,8 @@ const offlineExchange = () => {
           })
           return data
         })
+
+        let cartCleared = null
         cache.updateQuery({ query: CartsDocument, variables: {} }, data => {
           data?.carts.forEach(cart => {
             if (cart.id === patchInput.cartId) {
@@ -97,23 +101,13 @@ const offlineExchange = () => {
               cart.lines = []
               cart.total = 0
               cart.lineCount = 0
+              cartCleared = cart
             }
           })
           return data
         })
-        const carts = cache.readQuery({ query: CartsDocument })
 
-        const selectedCart = carts?.carts.find(cart => {
-          return cart.id === patchInput.cartId
-        })
-
-        if (selectedCart) {
-          selectedCart.lineCount = 0
-          selectedCart.lines = []
-          selectedCart.total = 0
-        }
-
-        return selectedCart || null
+        return null
       }
     }
   })
