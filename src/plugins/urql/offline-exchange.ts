@@ -16,8 +16,8 @@ const offlineExchange = () => {
   }
 
   return offlineExchangeInternal({
-    schema, 
-    storage, 
+    schema,
+    storage,
     keys: cacheKeys,
     updates: { // (result, args, cache, info)
       Mutation: {
@@ -25,61 +25,91 @@ const offlineExchange = () => {
       }
     },
     optimistic: { // (args, cache, info)
-      addProductToCart (_args, cache, info) {
+      addProductToCart(_args, cache, info) {
+        let cacheReturn = null
         const patchInput = info.variables.input as AddProductToCartInput
-        console.log(patchInput)
-        const { cartId, productId, qty } = patchInput
+        cache.updateQuery({ query: CartsDocument, variables: {} }, data => {
+          const hasCart = data?.carts.find(cart => patchInput.cartId === cart.id)
+          if (hasCart) {
+            const productsQuery = cache.readQuery({ query: ProductsDocument })
 
-        const carts = cache.readQuery({ query: CartsDocument })
-
-        const products = cache.readQuery({ query: ProductsDocument })
-
-        const selectedCart = carts?.carts.find(cart => {
-          return cart.id === cartId
+            const productToAdd = productsQuery?.products.find((product) => {
+              return product.id === patchInput.productId
+            })
+            if (productToAdd) {
+              const isAlreadyInCart = hasCart.lines.find(line => {
+                line?.product.id === patchInput.productId
+              })
+              if (isAlreadyInCart) {
+                isAlreadyInCart.qty += patchInput.qty
+              } else {
+                hasCart.lines.push({
+                  __typename: 'CartLine',
+                  id: 'cartid_fromFirstProduct' + productToAdd.id,
+                  qty: patchInput.qty,
+                  product: {
+                    __typename: 'Product',
+                    id: productToAdd.id,
+                    title: productToAdd.title,
+                    stock: productToAdd.stock,
+                    price: productToAdd.price,
+                  }
+                })
+                hasCart.lineCount = hasCart.lines.length
+              }
+            }
+            cacheReturn = hasCart
+          }
+          return data
         })
+        
+        console.log('Returned at the end of add', cacheReturn)
 
-        if (!selectedCart) return carts
-
-        const hasItem = selectedCart.lines.find(line => {
-          return line?.product.id === productId
+        return cacheReturn || null
+      },
+      clearCart(_args, cache, info) {
+        const patchInput = info.variables.input as ClearCartInput
+        cache.updateQuery({ query: CartsDocument, variables: {} }, data => {
+          data?.carts.forEach(cart => {
+            if (cart.id === patchInput.cartId) {
+              cart.lines.forEach(line => {
+                console.log('qty before clear', line?.qty, line)
+                if (line?.qty) {
+                  line.qty = 0
+                  console.log('qty after clear', line.qty)
+                }
+              })
+              cart.total = 0
+              cart.lineCount = 0
+            }
+            console.log('Data after', JSON.stringify(data?.carts, null, 1))
+          })
+          return data
         })
-
-        const productDetails = products?.products.find((product) => {
-          return product.id === productId
-        })
-
-        if (hasItem) {
-          hasItem.qty += qty
-        } else {
-          if (!productDetails) return selectedCart
-          selectedCart.lines.push({
-            __typename: 'CartLine',
-            id: productDetails.id,
-            qty: qty,
-            product: {
-              __typename: 'Product',
-              id: productDetails.id,
-              title: productDetails.title,
-              stock: productDetails.stock,
-              price: productDetails.price,
+        cache.updateQuery({ query: CartsDocument, variables: {} }, data => {
+          data?.carts.forEach(cart => {
+            if (cart.id === patchInput.cartId) {
+              cart.lines.forEach(line => {
+                if (line?.qty) {
+                  line.qty = 0
+                }
+              })
+              cart.lines = []
+              cart.total = 0
+              cart.lineCount = 0
             }
           })
-          selectedCart.lineCount = selectedCart.lines.length
-        }
-        
-        return selectedCart || null
-      },
-      clearCart (_args, cache, info) {
-        const patchInput = info.variables.input as ClearCartInput
+          return data
+        })
         const carts = cache.readQuery({ query: CartsDocument })
 
         const selectedCart = carts?.carts.find(cart => {
           return cart.id === patchInput.cartId
         })
-        console.log('selected cart', selectedCart)
+
         if (selectedCart) {
           selectedCart.lineCount = 0
-          selectedCart.lines = []  
+          selectedCart.lines = []
           selectedCart.total = 0
         }
 
