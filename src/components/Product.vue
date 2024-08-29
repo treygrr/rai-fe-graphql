@@ -26,9 +26,7 @@ const addToCart = () => {
       productId: props.product.id,
       qty: 1
     },
-  },
-{
-  date: Date.now()
-})
+    date: Date.now()
+  })
 }
 </script>
