@@ -69,7 +69,7 @@ const offlineExchange = () => {
           })
         }
 
-        // returnCart.lineCount = returnCart.lines.length
+        returnCart.lineCount = returnCart.lines.length
 
         return returnCart
       },
