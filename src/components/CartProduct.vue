@@ -1,6 +1,7 @@
 <template>
   <div v-if="line" style="border: 1px solid black">
-    <div>ID: {{ line.product.id }}</div>
+    <div>CartLine ID: {{ line.id }}</div>
+    <div>Product ID: {{ line.product.id }}</div>
     <div>Title: {{ line.product.title }}</div>
     <div>Stock: {{ line.product.stock }}</div>
     <div>Price: {{ line.product.price }}</div>
@@ -26,7 +27,8 @@ const addToCart = () => {
       cartId: props.cartId || '5a797e70-cdba-4738-b7a5-ca6a63a2ddc0',
       productId: props.line.product.id,
       qty: 1
-    }
+    },
+    date: Date.now()
   })
 }
 </script>
