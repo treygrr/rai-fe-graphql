@@ -8,7 +8,7 @@
       </div>
       Total: {{ cart.total }}
       Line Items: {{ cart.lineCount }}
-      <button @click="clearCart.executeMutation({ input: { cartId: cart.id } })">Clear Cart</button>
+      <button @click="clearCart.executeMutation({ input: { cartId: cart.id } }, { date: Date.now() })">Clear Cart</button>
     </div>
   </div>
 </template>

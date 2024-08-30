@@ -25,7 +25,8 @@ const addToCart = () => {
       cartId: props.cartId || '5a797e70-cdba-4738-b7a5-ca6a63a2ddc0',
       productId: props.product.id,
       qty: 1
-    }
+    },
+    date: Date.now()
   })
 }
 </script>

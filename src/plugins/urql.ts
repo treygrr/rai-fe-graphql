@@ -11,7 +11,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       offlineExchange(),
       fetchExchange
     ],
-    requestPolicy: 'cache-and-network' // 'cache-first' is default, unsure if this is the best option
+    requestPolicy: 'cache-first' // 'cache-first' is default, unsure if this is the best option
   }
 
   // const client = new Client(clientOptions)
